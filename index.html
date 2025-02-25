@@ -5,6 +5,29 @@
 		<title></title>
 		<style>
 			body { margin: 0; overflow: hidden;}
+			#hud {
+				position:fixed;
+				bottom: 0;
+				right: 0;
+				background-color: #404040;
+				padding: 10px;
+				padding-top: 15px;
+				margin: 15px;
+				width: 80px;
+				border-radius: 5px;
+			}
+
+			#hud h1 {
+				margin: 0;
+				padding: 0;
+				color: white;
+				font-size: 18px;
+			}
+
+			#hud input {
+				margin: 10px;
+			}
+
 		</style>
         <script type="importmap">
             {
@@ -17,5 +40,13 @@
 	</head>
 	<body>
 		<script type="module" src="/main.js"></script>
+		<div id="hud">
+			<h1>Path</h1>
+			<input type="checkbox" id="path">
+			<h1>Tracer</h1>
+			<input type="checkbox" id="tracer" checked>
+			<h1>Color</h1>
+			<input type="color" id="color" value="#ff0000">
+		</div>
 	</body>
 </html>
