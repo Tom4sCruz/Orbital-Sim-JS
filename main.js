@@ -76,8 +76,6 @@ class Satellite extends THREE.Mesh {
         this.position.y += this.vy*dt;
         this.position.z += this.vz*dt;
 
-        console.log("pos = ( ", this.position.x, ", ", this.position.y, ", ", this.position.z, " )");
-        console.log("vel = ( ", this.vx, ", ", this.vy, ", ", this.vz, " )");
     }
     collided() {
         if (this.geometry.parameters.radius+PLANET_RADIUS >= 
@@ -90,27 +88,47 @@ class Satellite extends THREE.Mesh {
     }
 }
 
+class Path extends THREE.Line {
+    constructor(sat) {
+        const geometry = new THREE.BufferGeometry();
+        const material = new THREE.LineBasicMaterial({color: sat.material.color});
+        super(geometry, material);
+        scene.add(this);
+
+        this.orbitPoints = [];
+    }
+}
+
 let sats = [];
 
 function buildSat(x, y, z, vx, vy, vz, color) {
     const sat = new Satellite(x, y, z, vx, vy, vz, color);
+    const path = new Path(sat);
     
-    sats.push(sat);
-    console.log(sats);
+    sats.push([sat, path]);
 }
 
-buildSat(0, 0, 4, 0.5, 0.1, 0, 0xff0000);
+buildSat(0, 0, 4, 0.4, 0, 0, 0xff0000);
 
 // Used for the blinking
 let clock = new THREE.Clock();
 
 function animate() {
     // Blinking
-    console.log(sats);
     let time = clock.getElapsedTime();
-    for (let i=0; i<sats.length; i++) {
-        sats[i].material.emissiveIntensity = Math.sin(time*1.5* Math.PI);
-        sats[i].update(0.1);
+    for (let i = 0; i < sats.length; i++) {
+        let satellite = sats[i][0];
+        let path = sats[i][1];
+        // Update satellite's material emissive intensity
+        satellite.material.emissiveIntensity = Math.sin(time * 1.5 * Math.PI);
+    
+        // Push a copy of the current position to avoid reference issues
+        path.orbitPoints.push(satellite.position.clone());
+        path.geometry.dispose();
+        path.geometry = new THREE.BufferGeometry().setFromPoints(path.orbitPoints);   
+    
+        // Update the satellite's physics
+        satellite.update(0.1);
     }
     controls.update();
     renderer.render(scene, camera);
@@ -118,6 +136,16 @@ function animate() {
 
 const colorInput = document.getElementById("color");
 colorInput.addEventListener("input", (event) => {
-    sats[0].material.color.set(event.target.value);     // To change in a way that it changes the selected satellite
-    sats[0].material.emissive.set(event.target.value);  // To change in a way that it changes the selected satellite
+    sats[0][0].material.color.set(event.target.value);     // To change in a way that it changes the selected satellite
+    sats[0][0].material.emissive.set(event.target.value);  // To change in a way that it changes the selected satellite
+    sats[0][1].material.color.set(event.target.value);
+});
+
+const tracerInput = document.getElementById("tracer");
+tracerInput.addEventListener("input", () => {
+    if (tracerInput.checked) {
+        sats[0][1].visible = true;
+    } else {
+        sats[0][1].visible = false;
+    }
 });
