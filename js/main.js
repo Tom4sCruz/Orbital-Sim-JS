@@ -14,60 +14,48 @@ scene.add(axis);
 scene.add(sun);
 scene.add(ambient_light);
 
-// Create Planet & Satellite
+// Create Planet & Satellites
+let sats = [];
 const planet = build_Planet(1, 2);
-const sat = build_Satellite(new THREE.Vector3(0, 1, 4), 
-                new THREE.Vector3(0.4, 0.1, 0), 
-                0.1, 
-                0xff0000,
-                planet,
-                clock.getElapsedTime());
+sats.push(
+    build_Satellite( new THREE.Vector3(0, 1, 4), new THREE.Vector3(0.4, 0.1, 0), 
+                    0.1, 0xff0000, planet, clock.getElapsedTime())
+);
 
 
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
-    sat.update(planet, DT);
-    sat.blink(clock.getElapsedTime());
+    sats[0][0].update(planet, DT);
+    sats[0][0].blink(clock.getElapsedTime());
+    sats[0][2].update(sats[0][0].position);
     renderer.render(scene, camera);
 }
 animate();
 
 
-/*
-function animate() {
-    // Blinking
-    let time = clock.getElapsedTime();
-    for (let i = 0; i < sats.length; i++) {
-        let satellite = sats[i][0];
-        let path = sats[i][1];
-        // Update satellite's material emissive intensity
-        satellite.material.emissiveIntensity = Math.sin(time * 1.5 * Math.PI);
-    
-        // Push a copy of the current position to avoid reference issues
-        path.orbitPoints.push(satellite.position.clone());
-        path.geometry.dispose();
-        path.geometry = new THREE.BufferGeometry().setFromPoints(path.orbitPoints);   
-    
-        // Update the satellite's physics
-        satellite.update(0.1);
+const pathInput = document.getElementById("path");
+pathInput.addEventListener("input", () => {
+    if (pathInput.checked) {
+        sats[0][1].visible = true;
+    } else {
+        sats[0][1].visible = false;
     }
-    controls.update();
-    renderer.render(scene, camera);
-}
-
-const colorInput = document.getElementById("color");
-colorInput.addEventListener("input", (event) => {
-    sats[0][0].material.color.set(event.target.value);     // To change in a way that it changes the selected satellite
-    sats[0][0].material.emissive.set(event.target.value);  // To change in a way that it changes the selected satellite
-    sats[0][1].material.color.set(event.target.value);
 });
 
 const tracerInput = document.getElementById("tracer");
 tracerInput.addEventListener("input", () => {
     if (tracerInput.checked) {
-        sats[0][1].visible = true;
+        sats[0][2].visible = true;
     } else {
-        sats[0][1].visible = false;
+        sats[0][2].visible = false;
     }
-});*/
+});
+
+
+const colorInput = document.getElementById("color");
+colorInput.addEventListener("input", (event) => {
+    sats[0][0].material.color.set(event.target.value);     // To change in a way that it changes the selected satellite
+    sats[0][0].material.emissive.set(event.target.value);  // To change in a way that it changes the selected satellite
+    sats[0][2].material.color.set(event.target.value);
+});

@@ -1,6 +1,10 @@
 import * as THREE from 'three';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { G, DT } from './main.js';
 import { scene } from './core.js';
+
 
 export class Planet extends THREE.Mesh {
 
@@ -75,12 +79,12 @@ export class Satellite extends THREE.Mesh {
 
 
 
-export class Path extends THREE.Line {
+export class Path extends Line2 {
 
-    constructor (sat, planet, n_points) {
+    constructor (sat, planet, n_points, color = 0x313131) { // #313131
 
-        const geometry = new THREE.BufferGeometry(); 
-        const material = new THREE.LineBasicMaterial({color: 0x313131}); // #313131
+        const geometry = new LineGeometry(); 
+        const material = new LineMaterial({color: color, linewidth: 1});
 
         super(geometry, material);
 
@@ -90,8 +94,8 @@ export class Path extends THREE.Line {
         this.calculate_points(sat.geometry.parameters.radius, planet.geometry.parameters.radius,
                             sat.position, planet.position, sat.velocity, planet.mass);
 
-        this.geometry.dispose();
-        this.geometry = new THREE.BufferGeometry().setFromPoints(this.orbitPoints); 
+        this.geometry.setPositions(this.orbitPoints.flatMap(p => [p.x, p.y, p.z]));
+        this.computeLineDistances();
     }
 
     calculate_points(sat_radius, planet_radius, sat_position, planet_pos, sat_velocity, planet_mass) {
@@ -131,3 +135,43 @@ export class Path extends THREE.Line {
         return 1;
     }
 }
+
+
+export class Tracer extends Line2 {
+
+    constructor (n_points, color){
+        
+        const geometry = new LineGeometry();
+        const material = new LineMaterial({color: color, linewidth:3});
+
+        super(geometry, material);
+
+        this.n_points = n_points;
+        this.orbitPoints = [];
+
+        this.geometry.setPositions(new Array(n_points * 3).fill(0)); 
+    }
+
+    update (sat_pos) {
+        if(this.orbitPoints.length >= this.n_points) {
+            this.orbitPoints.shift();
+        } 
+            this.orbitPoints.push(sat_pos.clone());
+
+            const flatPoints = this.orbitPoints.flatMap(p => [p.x, p.y, p.z]);
+
+            if (flatPoints.length < 6) return;
+            /* 
+            The reason for the line above is because if the allocation of memory.
+            Even though, we allocate memory on ln. 151, .setPositions() still expects at least 
+            2 points (6 elements) to update the geometry. Fewer than that (<5 elements, thus <2 points)
+            and the geometry may be computed incorrectly, causing the line not to render.
+            */
+
+            this.geometry.setPositions(flatPoints);
+            this.geometry.needsUpdate = true;
+
+            this.computeLineDistances();
+            this.material.needsUpdate = true;
+    }
+} 
