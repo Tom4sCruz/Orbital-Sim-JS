@@ -35,31 +35,17 @@ export class Satellite extends THREE.Mesh {
     }
 
     collided(planet_pos, planet_radius) {
-        if (this.geometry.parameters.radius + planet_radius >= this.position.distanceTo(planet_pos)) {
-                
-                scene.remove(this);
-                this.geometry.dispose();
-                this.material.dispose();
-
-                return true;
-            }
-        
-        return false;
+        return this.geometry.parameters.radius + planet_radius >= this.position.distanceTo(planet_pos);
     }
 
     blink(t) {
         this.material.emissiveIntensity = Math.sin( (t-this.init_time) * Math.PI );
     }
 
-    update(planet, dt) {
-
-        if (this.collided(planet.position, planet.geometry.parameters.radius)) {
-            return 0;
-        }
-
+    update(planet_mass, dt) {
         let r = Math.sqrt(this.position.x**2 + this.position.y**2 + this.position.z**2);
 
-        let ag = G * planet.mass / r**2;
+        let ag = G * planet_mass / r**2;
         
         let ax = ag * this.position.x / r;
         let ay = ag * this.position.y / r;
@@ -72,8 +58,6 @@ export class Satellite extends THREE.Mesh {
         this.position.x += this.velocity.x * dt;
         this.position.y += this.velocity.y * dt;
         this.position.z += this.velocity.z * dt;
-
-        return 1;
     }
 }
 
@@ -84,21 +68,26 @@ export class Path extends Line2 {
     constructor (sat, planet, n_points, color = 0x313131) { // #313131
 
         const geometry = new LineGeometry(); 
-        const material = new LineMaterial({color: color, linewidth: 1});
+        const material = new LineMaterial({color: color, linewidth: 1, transparent:true, opacity:0.5});
 
         super(geometry, material);
 
         this.n_points = n_points;
         this.orbitPoints = [];
 
+        this.geometry.setPositions(new Array(n_points * 3).fill(0)); 
+
         this.calculate_points(sat.geometry.parameters.radius, planet.geometry.parameters.radius,
                             sat.position, planet.position, sat.velocity, planet.mass);
 
-        this.geometry.setPositions(this.orbitPoints.flatMap(p => [p.x, p.y, p.z]));
-        this.computeLineDistances();
+        if (this.orbitPoints.length > 1) {
+            this.geometry.setPositions(this.orbitPoints.flatMap(p => [p.x, p.y, p.z]));
+            this.computeLineDistances();
+        }
     }
 
     calculate_points(sat_radius, planet_radius, sat_position, planet_pos, sat_velocity, planet_mass) {
+        this.orbitPoints = [];
         let sat_pos = sat_position.clone();
         let sat_vel = sat_velocity.clone();
         let dt = DT;
@@ -160,7 +149,7 @@ export class Tracer extends Line2 {
 
             const flatPoints = this.orbitPoints.flatMap(p => [p.x, p.y, p.z]);
 
-            if (flatPoints.length < 6) return;
+            if (this.orbitPoints.length < 2) return;
             /* 
             The reason for the line above is because if the allocation of memory.
             Even though, we allocate memory on ln. 151, .setPositions() still expects at least 
@@ -168,7 +157,7 @@ export class Tracer extends Line2 {
             and the geometry may be computed incorrectly, causing the line not to render.
             */
 
-            this.geometry.setPositions(flatPoints);
+            this.geometry.setPositions(this.orbitPoints.flatMap(p => [p.x, p.y, p.z]));
             this.geometry.needsUpdate = true;
 
             this.computeLineDistances();

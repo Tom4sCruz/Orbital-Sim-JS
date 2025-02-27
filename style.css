@@ -1,0 +1,83 @@
+body {
+    margin: 0; 
+    overflow: hidden;
+}
+
+#toggles {
+    position:fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #404040dd;
+    padding: 10px;
+    padding-top: 15px;
+    margin: 15px;
+    width: 80px;
+    border-radius: 5px;
+}
+
+h1 {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size: 18px;
+}
+
+#toggles input {
+    margin: 10px;
+}
+
+
+/* Remove arrows from input [type="number"] */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+  width: 50px;
+}
+
+#create {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #404040dd;
+    color: white;
+    padding: 10px;
+    margin: 15px;
+    border-radius: 5px;
+}
+
+#create input[type="button"] {
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+#create div {
+    margin-bottom: 10px;
+}
+
+#create div div {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+#create input[type="color"] {
+    margin: 10px;
+    width: 80px;
+    height: 40px;
+}
+
+#create #visible {
+    display: flex;
+    margin-bottom: 30px;
+}
+
+#visible input {
+    margin-left: 10px;
+}

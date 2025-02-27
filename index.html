@@ -3,32 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<style>
-			body { margin: 0; overflow: hidden;}
-			#hud {
-				position:fixed;
-				bottom: 0;
-				right: 0;
-				background-color: #404040;
-				padding: 10px;
-				padding-top: 15px;
-				margin: 15px;
-				width: 80px;
-				border-radius: 5px;
-			}
-
-			#hud h1 {
-				margin: 0;
-				padding: 0;
-				color: white;
-				font-size: 18px;
-			}
-
-			#hud input {
-				margin: 10px;
-			}
-
-		</style>
+		<link rel="stylesheet" href="style.css">
         <script type="importmap">
             {
               "imports": {
@@ -40,13 +15,43 @@
 	</head>
 	<body>
 		<script type="module" src="/js/main.js"></script>
-		<div id="hud">
+		<div id="toggles">
 			<h1>Path</h1>
 			<input type="checkbox" id="path" checked>
 			<h1>Tracer</h1>
 			<input type="checkbox" id="tracer" checked>
 			<h1>Color</h1>
-			<input type="color" id="color" value="#ff0000">
+			<input type="color" id="color" value="#ffffff">
+		</div>
+
+		<div id="create">
+			<div id="visible">
+				<h1>Preview visible</h1>
+				<input type="checkbox" checked>
+			</div>
+			<div id="pos">
+				<h1>Position</h1>
+				<div class="numbers-input">	
+					x:<input type="number" id="x" value="0">
+					y:<input type="number" id="y" value="0">
+					z:<input type="number" id="z" value="0">
+				</div>
+			</div>
+			<div id="vel">
+				<h1>Velocity</h1>
+				<div class="numbers-input">
+					v<sub>x</sub>:<input type="number" id="vx" value="0">
+					v<sub>y</sub>:<input type="number" id="vy" value="0">
+					v<sub>z</sub>:<input type="number" id="vz" value="0">
+				</div>
+			</div>
+			<div id="col">
+				<h1>Color</h1>
+				<input type="color" id="create-color" value="#ff0000">
+			</div>
+			
+			<h1></h1>
+			<input type="button" id="create-button" value="Create">
 		</div>
 	</body>
 </html>
