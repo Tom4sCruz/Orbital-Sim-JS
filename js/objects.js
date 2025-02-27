@@ -24,7 +24,7 @@ export class Satellite extends THREE.Mesh {
     
     constructor (pos, radius, velocity, color, init_time) {
         const geometry = new THREE.SphereGeometry(radius);
-        const material = new THREE.MeshStandardMaterial({color: color, emissive: color, emissiveIntensity: 0});
+        const material = new THREE.MeshStandardMaterial({color: color, emissive: color, emissiveIntensity: 0, transparent:true, opacity: 1});
 
         super(geometry, material);
 

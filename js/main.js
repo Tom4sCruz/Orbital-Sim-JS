@@ -64,6 +64,7 @@ animate();
 // Preview
 
 visibleInput.addEventListener("change", () => {
+    console.log("preview: ", preview[0], preview[1]);
     if (visibleInput.checked) {
         preview[0].visible = true;
         preview[1].visible = true;
