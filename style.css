@@ -73,7 +73,7 @@ input[type=number] {
     height: 40px;
 }
 
-#create #visible {
+#create #visible-div {
     display: flex;
     margin-bottom: 30px;
 }
