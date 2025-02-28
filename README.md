@@ -5,7 +5,7 @@ A 3D orbit simulator with Newtonian Physics. You can add as many satellites as y
 ![Example-of-usage](media/orbital-sim-js-animated.gif)
 
 ## How to run it
-I've been opening it using the 'Live Server' in VSCode.<br>
+I've been opening it using the **Live Server** in VSCode.<br><br>
 Another possibility is doing:
 ```bash
 npx serve .
