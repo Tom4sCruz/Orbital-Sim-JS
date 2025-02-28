@@ -38,6 +38,7 @@ export function createPreview(pos, velocity, color, planet) {
     return [temp_sat, temp_path];
 }
 
+// Remove object from Sim
 export function dispose_object(info) {
     for( let j=0; j<3; j++) {
         scene.remove(info[j]);

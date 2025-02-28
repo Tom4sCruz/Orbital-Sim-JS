@@ -20,7 +20,7 @@ const planet = build_Planet(1, 2);
 
 // Variables
 let preview = createPreview(new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), 0xababab, planet);
-export let sats = [];
+let sats = [];
 
 // Input values
 const visibleInput = document.getElementById("visible");
@@ -40,6 +40,33 @@ const pathInput = document.getElementById("path");
 const tracerInput = document.getElementById("tracer");
 const colorInput = document.getElementById("color");
 
+let active_sat = 0;
+
+// Create a button for the satellite
+function createSatButton(index) {
+    const button = document.createElement("button");
+    button.textContent = `${index}`;
+    button.classList.add("sat-button");
+
+    const color_bar = document.createElement("span");
+    color_bar.classList.add("color-bar");
+    color_bar.style.backgroundColor = '#' + sats[index][0].material.color.getHexString();
+
+    button.appendChild(color_bar);
+
+    button.addEventListener("click", () => {
+        const info = sats[index];
+
+        pathInput.checked = info[1].visible;
+        tracerInput.checked = info[2].visible;
+        colorInput.value = '#' + info[0].material.color.getHexString();
+
+        active_sat = index;
+    });
+
+    document.getElementById("satellite-ids").appendChild(button);
+}
+
 // Animate
 function animate() {
     requestAnimationFrame(animate);
@@ -51,6 +78,7 @@ function animate() {
             sats[i][2].update(sats[i][0].position);
 
             if (sats[i][0].collided(planet.position, planet.geometry.parameters.radius)) {
+                console.log("Satellite ", i, " has collided!");
                 dispose_object(sats[i]);
                 sats.splice(i, 1);
             }
@@ -64,7 +92,6 @@ animate();
 // Preview
 
 visibleInput.addEventListener("change", () => {
-    console.log("preview: ", preview[0], preview[1]);
     if (visibleInput.checked) {
         preview[0].visible = true;
         preview[1].visible = true;
@@ -149,6 +176,8 @@ createInput.addEventListener("click", () => {
     const color = createColorInput.value;
 
     sats.push(build_Satellite(pos, vel, color, planet, clock.getElapsedTime()));
+    createSatButton(sats.length - 1);
+
     colorInput.value = color;
 });
 
@@ -156,24 +185,27 @@ createInput.addEventListener("click", () => {
 // Existing Satellite
 pathInput.addEventListener("change", () => {
     if (pathInput.checked) {
-        sats[0][1].visible = true;
+        sats[active_sat][1].visible = true;
     } else {
-        sats[0][1].visible = false;
+        sats[active_sat][1].visible = false;
     }
 });
 
 tracerInput.addEventListener("change", () => {
     if (tracerInput.checked) {
-        sats[0][2].visible = true;
+        sats[active_sat][2].visible = true;
     } else {
-        sats[0][2].visible = false;
+        sats[active_sat][2].visible = false;
     }
 });
 
 colorInput.addEventListener("input", (event) => {
-    sats[0][0].material.color.set(event.target.value);
-    sats[0][0].material.emissive.set(event.target.value);
-    sats[0][2].material.color.set(event.target.value);
+    sats[active_sat][0].material.color.set(event.target.value);
+    sats[active_sat][0].material.emissive.set(event.target.value);
+    sats[active_sat][2].material.color.set(event.target.value);
+    const div = document.getElementById("satellite-ids");
+    const banner = div.children[active_sat].querySelector(".color-bar");
+    banner.style.backgroundColor = event.target.value;
 });
 
 

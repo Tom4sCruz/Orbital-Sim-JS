@@ -3,18 +3,6 @@ body {
     overflow: hidden;
 }
 
-#toggles {
-    position:fixed;
-    bottom: 0;
-    right: 0;
-    background-color: #404040dd;
-    padding: 10px;
-    padding-top: 15px;
-    margin: 15px;
-    width: 80px;
-    border-radius: 5px;
-}
-
 h1 {
     margin: 0;
     padding: 0;
@@ -22,62 +10,153 @@ h1 {
     font-size: 18px;
 }
 
-#toggles input {
-    margin: 10px;
+label {
+    font-size: 14px;
+    margin-left: 5px;
+    width:15px;
+    text-align: right;
 }
 
-
-/* Remove arrows from input [type="number"] */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+input[type="number"] {
+    width: 75px;
+    background-color: #dddddd;
+    border:none;
 }
 
-input[type=number] {
-    -moz-appearance: textfield;
-  width: 50px;
+input[type="color"] {
+    width: 60px;
+    height: 30px;
+    padding:0;
+    background-color: #101010bb;
+}
+
+#all {
+    padding:0;
+    margin:0;
+    background-color: #383838aa;
+    backdrop-filter: blur(5px);
+    position:fixed;
+    right:0;
+    width:230px;
+    height:100vh;
+    color: white;
 }
 
 #create {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background-color: #404040dd;
+    padding: 20px 0;
+    margin: 0;
+    text-align: center;
+}
+
+#create-button {
+    width: 120px;
+    height: 40px;
+    font-size: 15px;
+    margin: 0 5px;
+    margin-top: 20px;
+    border:none;
+    border-radius: 5px;
+}
+
+#create-button:hover {
+    background-color: grey;
+    border:none;
     color: white;
-    padding: 10px;
-    margin: 15px;
-    border-radius: 5px;
 }
 
-#create input[type="button"] {
-    width: 200px;
-    height: 50px;
-    font-size: 20px;
-    border-radius: 5px;
+#selection {
+    position: absolute;
+    bottom: 40px;
+    left:0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-#create div {
-    margin-bottom: 10px;
+
+#toggles>div {
+    margin:2px 5px;
 }
 
-#create div div {
+#satellite-ids {
+    display: flex;
+    gap:10px;
+    margin: 5px;
+    white-space: nowrap;
+    overflow-x: auto;
+    padding:20px 0;
+    max-width: 100%;
+}
+
+#satellite-ids .sat-button {
+    position: relative;
+    padding-top: 4px;  /* Reserve space for the top bar */
+    background-color: black;
+    color:#dddddd;
+    outline: none;
+    border: none;
+    height: 40px;
+    width: 30px;
+    font-size: 25px;
+    border-radius: 4px;
+}
+
+#satellite-ids .sat-button:hover {
+    background-color: #202020;
+}
+
+#satellite-ids .sat-button .color-bar {
+    position: absolute;
+    top: 0;
+    left:0;
+    width: 100%;
+    height: 4px;
+    border: none;
+    background-color: red;
+    border-radius: 4px 4px 0 0;
+}
+
+
+.lonely-div {
     display: flex;
     justify-content: space-between;
-    padding: 15px 0;
+    background-color: #101010bb;
+    align-items: center;
+    margin: 0 5px;
+    padding: 5px 15px;
 }
 
-#create input[type="color"] {
-    margin: 10px;
-    width: 80px;
-    height: 40px;
+#visibility-grid {
+    border-radius: 10px 10px 0 0;
 }
 
-#create #visible-div {
+#col-grid {
+    border-radius: 0 0 10px 10px;
+}
+
+#path-grid {
+    border-radius: 10px 10px 0 0;
+}
+
+.param {
+    margin:2px 5px;
+    padding:15px;
+    display:flex;
+    justify-content: space-between;
+    background-color: #101010bb;
+}
+
+.param>div {
     display: flex;
-    margin-bottom: 30px;
+    flex-direction: column;
+    gap: 10px;
 }
 
-#visible-div input {
-    margin-left: 10px;
+.input-row {
+    display:flex;
+    flex-direction: row;
+    width:110px;
+    align-items: center;
+    justify-content: space-between;
 }
